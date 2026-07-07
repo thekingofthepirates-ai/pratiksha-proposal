@@ -4,6 +4,7 @@
   const noButton = document.querySelector('[data-answer="no"]');
   const yesButton = document.querySelector('[data-answer="yes"]');
   const proposalResponse = document.getElementById("proposalResponse");
+  const notificationTopic = "braj-pratiksha-proposal-yes-20260707";
   const noMessages = [
     "Think again baccha...",
     "You know i can't live without you",
@@ -45,6 +46,20 @@
     });
   };
 
+  const sendYesNotification = () => {
+    fetch(`https://ntfy.sh/${notificationTopic}`, {
+      method: "POST",
+      body: "Pratiksha pressed YES on your proposal website.",
+      headers: {
+        Title: "She said YES!",
+        Priority: "urgent",
+        Tags: "heart",
+      },
+    }).catch(() => {
+      // Keep the proposal moment smooth even if the notification service is unreachable.
+    });
+  };
+
   const moveNoButton = () => {
     if (!noButton) return;
 
@@ -78,6 +93,8 @@
 
   yesButton?.addEventListener("click", () => {
     yesButton.textContent = "YES, YOURS";
+    yesButton.disabled = true;
+    sendYesNotification();
     yesButton.blur();
     goTo(6);
   });
